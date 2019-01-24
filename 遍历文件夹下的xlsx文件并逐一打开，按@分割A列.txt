@@ -1,0 +1,26 @@
+Public Sub splitA1()
+    For i = 1 To [a65536].End(3).Row
+        s = Split(Cells(i, 1), "@")
+        Cells(i, 1).Resize(1, UBound(s) + 1) = s
+    Next
+End Sub
+
+
+Sub 遍历所有文件()
+Dim Fn$, N%
+filepath = "F:\电脑报价\youdemai\apple\1000_excel\"  '需要遍历的文件夹
+Fn = Dir(filepath & "*.xlsx")
+While Fn <> ""
+   N = N + 1
+   Range("A" & N) = Fn
+   
+   Dim wb As Workbook
+   
+   Set wb = Workbooks.Open(filepath & Fn)
+   Call splitA1   '将A1列的数据按照一定的分隔符分割
+   wb.Save
+   wb.Close
+   Fn = Dir   '这句需要放在Workbooks.Open后面
+Wend
+End Sub
+
