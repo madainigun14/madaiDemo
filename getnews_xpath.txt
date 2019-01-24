@@ -1,0 +1,33 @@
+http://www.xinhuanet.com/politics/xxjxs/2018-11/16/c_129995539.htm
+
+查找出该网页的，可拆分的最小字符串、视频、图片、链接地址的集合
+
+
+//p/descendant::img|embed|video[@src]  | //p/descendant::a[text()] | //p/strong[text()] | //p/strong/font[text()] | //p/font[text()] | //div[count(node())>=10]/descendant::p[count(*)=0] 
+
+//p[count(*)!=0] [text()]
+
+//p/descendant::img|embed|video[@src]|//p/descendant::a[text()]|//p/strong[text()]|//p/strong/font[text()]|//p/font[text()]|//div[count(node())>=10]/descendant::p[count(*)=0]|//p[count(*)!=0][text()]
+//p/descendant::a[text()]|//p/strong[text()]|//p/strong/font[text()]|//p/font[text()]
+
+
+其中//p[count(*)=0]找到的是，只有p，没有任何子节点的情况
+
+# (1).p只有文字
+# (2).p只有其子节点文字
+# (3).p有文字，其子节点也有文字   //p[count(text())=2]  这句可以精确查找出来，共20个TODO
+# (4).p下面a有@href
+# (5).p下面img、embed、video有@src
+
+先用//p[count(*)!=0]求出所有的包含子节点的p，一共33个，后来发现这样求出来会把(4)(5)带进来
+于是需要加判断条件//p[count(*)!=0][text()]，过滤掉3个，真正有30个
+
+
+
+//p/descendant::img|embed|video[@src]|//div[count(node())>=10]/descendant::p[count(*)=0]|//p[count(*)!=0][text()]
+
+
+
+
+//p[count(*)!=0][string-length(text())!=0] | //p/descendant::*[string-length(text())!=0] 
+           有子节点且有文字的p节点的字符长度             p节点的子孙节点的文字长度

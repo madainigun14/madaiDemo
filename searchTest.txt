@@ -1,0 +1,38 @@
+﻿
+<request><warehouseCode>DZN5</warehouseCode><ownerCode>EMBRYFORM</ownerCode><orderCode>18111541114365</orderCode><orderId></orderId><orderType>JYCK</orderType><cancelReason></cancelReason></request>
+
+09:13:42.442 [http-nio-8099-exec-4186] INFO  rtx.controller.RtxController - 方法：order.cancel
+格式：xml
+key：23036663
+V：2.0
+签名方法：md5
+时间戳：2018-11-16 09:14:12
+签名：AD873E6FAF1B2CE8BC674C4D1CAF705B
+签名1：AD873E6FAF1B2CE8BC674C4D1CAF705B
+playload：<![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+
+
+<request><warehouseCode>DZN5</warehouseCode><ownerCode>EMBRYFORM</ownerCode><orderCode>18111541114365</orderCode><orderId></orderId><orderType>JYCK</orderType><cancelReason></cancelReason></request>
+
+09:13:42.442 [http-nio-8099-exec-4186] INFO  rtx.controller.RtxController - 方法：order.cancel
+格式：xml
+key：23036663
+V：2.0
+签名方法：md5
+时间戳：2018-11-16 09:14:12
+签名：AD873E6FAF1B2CE8BC674C4D1CAF705B
+签名1：AD873E6FAF1B2CE8BC674C4D1CAF705B
+playload：<![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+
+
+<request><warehouseCode>DZN5</warehouseCode><ownerCode>EMBRYFORM</ownerCode><orderCode>18111541114365</orderCode><orderId></orderId><orderType>JYCK</orderType><cancelReason></cancelReason></request>
+
+09:13:42.442 [http-nio-8099-exec-4186] INFO  rtx.controller.RtxController - 方法：order.cancel
+格式：xml
+key：23036663
+V：2.0
+签名方法：md5
+时间戳：2018-11-16 09:14:12
+签名：AD873E6FAF1B2CE8BC674C4D1CAF705B
+签名1：AD873E6FAF1B2CE8BC674C4D1CAF705B
+playload：<![CDATA[<?xml version="1.0" encoding="UTF-8"?>

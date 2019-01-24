@@ -1,0 +1,52 @@
+"""
+保密综合业务管理平台，基于bootstrap，标签的层级、class命名非常严格，所以可以找到css选择器的通用表达式
+"""
+# 1.列表上方的功能按钮
+selector_submitbutton = "button[class^='btn btn-sm btn-danger']"
+xpath_submitbutton = "//*[starts-with(@class,'btn btn-sm btn-danger')]"
+
+# 2.左侧树结构菜单 [class='menu-text']得到元素，用text属性访问
+selector_sidebar = "div[class^='sidebar']>ul>li>a>*[class='menu-text']"
+
+# 3.导航菜单 [class='menu-text']得到元素，用text属性访问
+selector_navibar = "div[class^='navbar']>ul>li>a>*[class='menu-text']"
+
+# 4.列表的thead通用表达式：
+selector_theadselecotr = "div[class='page-content']>div>div>div>table>thead"
+
+# 5.列表的tbody通用表达式：
+selector_tbody = "div[class='page-content']>div>div>div>table>tbody"
+
+# 6.操作列的高亮按钮   
+selector_operbutton = "a[class='danger'][data-original-title='']"
+
+# 7.操作列的灰色按钮 某些是grey disable；[data-original-title='']输入文本定位
+selector_disablebutton = "a[class*='grey']"
+
+# 8.table列表中的checkbox
+selector_checkbox = "label[class='pos-rel']>input"
+
+# 9.table列表下方的链接a
+selector_pagination = "div.pagination>ul>li>a"
+
+# 10.网页中的日历控件对象
+selector_calendar = "div[class='datetimepicker datetimepicker-dropdown-bottom-right dropdown-menu'][style*='block']"
+
+# 11.列表上方的下拉框
+selector_select = "div[class*='col-xs']>select"
+
+# 12.网页弹出层的最外层的div
+selector_div_0 = "div[class='modal fade in']>div>div"
+
+# 12.1.网页弹出层的最外层的div的标题
+selector_div_0_header = "div[class='modal fade in']>div>div>div[class*='header']"
+
+# 12.2.网页弹出层的最外层的div的body
+selector_div_0_body = "div[class='modal fade in']>div>div>div[class*='body']"
+
+# 12.3.网页弹出层的最外层的div的foot
+selector_div_0_foot = "div[class='modal fade in']>div>div>div[class*='foot']"
+
+# 13.右上角用户名的下拉框 
+selector_user = "div[class*='user'][class*='drop']"
+
