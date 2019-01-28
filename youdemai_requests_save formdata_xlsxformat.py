@@ -105,6 +105,11 @@ BRAND_DICT={
     "格莱富": "p0645"}
 
 def get_brand_dict(_url="http://www.youdemai.net/products/product/brands?c=5&type=L&source="):
+    '''
+    根据url获取产品的字典，默认url为“笔记本”
+    :param _url: 笔记本首页
+    :return: 各大品牌产品url地址集合
+    '''
     brand_dict = {}
     _request_headers = {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
@@ -534,228 +539,6 @@ def get_price_by_session(_session, _product_url, _radio_ids):
     return price
 
 
-# Excel批量读、写json，dict，list等数据格式公共类
-class Excel:
-    """
-    处理Excel
-    """
-
-    def __init__(self, excelname):
-        self.__excelname = excelname
-
-    '''
-    @property
-    def excelname(self):
-        return self.__excelname
-
-    @excelname.setter
-    def excelname(self, value):
-        self.__excelname = value
-
-    @excelname.deleter
-    def excelname(self):
-        del self.__excelname
-    '''
-
-    # 将指定的单个Sheet里的单元格内容，每一行读取成一个字典，最后放在一个list里
-    def readsheet(self, sheetname):
-        """
-        读取指定名称的sheet内容
-        :param sheetname:  sheet名称
-        :return: 返回当前sheet页内的数据，以list形式返回
-        """
-        _workbook = xlrd.open_workbook(self.__excelname)
-        sheet = _workbook.sheet_by_name(sheetname)
-
-        # 获取行数
-        rows = sheet.nrows
-        # print("行数是：")
-        # print(rows) #debug only，result：PASS
-
-        # 获取第一行数据
-        _titlelist = sheet.row_values(0)
-
-        # 定义一个list存放所有非第一行数据
-        dictlist = {}
-        list = []
-        for row in range(1, rows):
-            rowvalues = sheet.row_values(row)
-            # print("每行的数据是：")
-            # print(rowValues) #debug only，result：PASS
-
-            dictdata = dict(zip(_titlelist, rowvalues))  # 将title列作为Key，将其余的列作为Value，循环打包成字典
-            list.append(dictdata)
-
-        # print("readSheet()返回结果：" + str(dictlist))
-        dictlist[sheet.name] = list  # 2018/12/5 修改代码，返回完整json格式
-        return dictlist
-
-    # 循环读取Excel表格里的所有Sheet里的单元格内容,最终返回一个符合json格式的dict、list嵌套结构
-    def readsheets(self):
-        """
-        循环读取所有sheet页里的内容
-        :return: 返回一个符合json规范的dict[list]嵌套结构
-        """
-        _workbook = xlrd.open_workbook(self.__excelname)
-        _sheets = _workbook.sheet_names()  # 通过Excel的Workbook对象获取到Sheet集合
-
-        # print(str(len(self.sheets))) # debug only
-        dictlists = {}  # 最外层是空字典
-        for sheetno in range(0, len(_sheets)):
-            # 获取行数
-            currentsheetname = _sheets[sheetno]  # 当前Sheet名称
-            currentsheet = _workbook.sheet_by_name(currentsheetname)  # 当前Sheet对象
-
-            # print (self.sheets[sheetno]) #debug only
-            rows = currentsheet.nrows  # 当前的Sheet里有nrows行
-
-            # 获取第一行数据，作为标题数据，也就是dict里的key
-            _titlelist = currentsheet.row_values(0)
-
-            # 定义一个list存放所有非第一行数据
-            # 非第一行循环添加为value
-            dictlist = []
-            for row in range(1, rows):  # 从第2行开始
-                rowvalues = currentsheet.row_values(row)
-                # print("每行的数据是：")
-                # print(rowValues) #debug only，result：PASS
-
-                dictdata = dict(zip(_titlelist, rowvalues))  # 将title列作为Key，将其余的列作为Value，循环打包成字典
-                dictlist.append(dictdata)
-
-            # print(self.dictlist)  #debug only
-            # return self.dictlist
-
-            # self.dictlists.append(self.dictlist)
-            dictlists[_sheets[sheetno]] = dictlist
-
-        # print("readSheets()返回结果：" + str(dictlists))  # debug only
-        return dictlists
-
-    def _write_data_to_cells(self, _data):
-        """
-        将数据循环写入到Excel当前Sheet的单元格里
-        [
-            {
-                "Thai": "สวัสดีครับ/สวัสดีค่ะ",
-                "English": "how do you do",
-                "Korean": "안녕하세요",
-                "Japanese": "こんにちは",
-                "Spanish": "Buenos dias"
-            }
-        ]
-        :param _data: 数据
-        :return:
-        """
-        _keys = list(_data[0].keys())
-        _length = len(_keys)
-
-        # 先写入标题
-        for k in range(0, _length):
-            # Range函数，操作当前工作Sheet的单元格，参数是元祖，索引值从1开始
-            xlwings.Range((1, k + 1)).value = _keys[k]
-
-        for i in range(0, len(_data)):
-            for j in range(_length):
-                # Range从1开始，并且标题栏已经将Range("A1:D1")写入，则需要从A2开始，所以i+2
-                xlwings.Range((i + 2, j + 1)).value = _data[i][_keys[j]]
-
-    def writesheet(self, _sheetdata):
-        """
-        将dict{list[dict]}的json结构的数据_data写到名称为_sheet_name的sheet里
-        {
-                 "外语学习": [
-                                {
-                                    "Thai": "สวัสดีครับ/สวัสดีค่ะ",
-                                    "English": "how do you do",
-                                    "Korean": "안녕하세요",
-                                    "Japanese": "こんにちは",
-                                    "Spanish": "Buenos dias"
-                                }
-                            ]
-        }
-        :param _sheetdata: 数据
-        :return: 生成指定目录下、指定名称、指定sheet名称的Excel文件，以xlsx形式保存
-        """
-        # https://blog.csdn.net/weixin_40693324/article/details/78855302
-        # 将Excel读取的数据写到目标Excel里
-
-        app = xlwings.App(visible=True, add_book=False)
-        book = app.books.add()
-
-        # 从读取的数据里将sheet名称解析出来
-        _sheet_name = list(_sheetdata.keys())[0]
-
-        book.sheets.add(_sheet_name)  # 添加一个Sheet
-        book.sheets.__delitem__("Sheet1")  # 删除Sheet1
-
-        _value = list(_sheetdata.values())[0]
-
-        self._write_data_to_cells(_value)
-
-        book.save(self.__excelname)
-        book.close()
-        app.kill()
-
-    def writesheets(self, _sheetdata):
-        """
-        将dict{list[dict]}的json结构的数据_data写到名称为_sheet_name的sheet里
-        {
-            "这是sheet2": [
-                            {
-                                "A": 1,
-                                "B": 2,
-                                "C": 3
-                            },
-                            {
-                                "A": 11,
-                                "B": 22,
-                                "C": 33
-                            },
-                            {
-                                "A": 111,
-                                "B": 222,
-                                "C": 333
-                            },
-                            {
-                                "A": 1111,
-                                "B": 2222,
-                                "C": 3333
-                            }
-                        ],
-            "外语学习": [
-                            {
-                                "Thai": "สวัสดีครับ/สวัสดีค่ะ",
-                                "English": "how do you do",
-                                "Korean": "안녕하세요",
-                                "Japanese": "こんにちは",
-                                "Spanish": "Buenos dias"
-                            }
-                        ]
-        }
-        :param _sheetdata: 数据
-        :return: 生成指定目录下、指定名称、指定sheet名称的Excel文件，以xlsx形式保存
-        """
-        app = xlwings.App(visible=True, add_book=False)
-        book = app.books.add()
-
-        length = len(_sheetdata.keys())
-        for m in range(0, length):
-            sheet = list(_sheetdata.keys())[m]
-            book.sheets.add(sheet, before="Sheet1")  # 加上before="Sheet1"，才会按顺序添加Sheet
-            _value = list(_sheetdata.values())[m]
-            # print(_value)
-
-            for n in range(len(list(_sheetdata.values())[m])):
-                self._write_data_to_cells(_value)
-
-        book.sheets.__delitem__("Sheet1")  # 最后删除Sheet1
-
-        book.save(self.__excelname)
-        book.close()
-        app.kill()
-
-
 # python 实现N个数组的排列组合(笛卡尔积算法)
 class Cartesian:
     # 初始化
@@ -842,10 +625,10 @@ def get_formdata_and_price_by_url_batch(_brand, _product_name_list, _product_url
     with futures.ProcessPoolExecutor(max_workers=_max_workers) as executor:
         to_do = []
         count_future = 0  # 声明一个计数器，用来计算进程数，并方便打印
-        #hp_not_done = ['惠普 CQ36', '惠普 dv2900', '惠普 dv6700', '惠普 6470b', '惠普 OMEN 17-an000TX', '惠普 4321s', '惠普 WASD 15-AX102TX', '惠普 4431s', '惠普 暗影精灵III代', '惠普 14-ar000', '惠普 WASD 15-AX101TX', '惠普 14-ar108TX', '惠普 14-r020tx', '惠普 15-ac636TX', '惠普 15g-ad002tx', '惠普 15g-br008TX', '惠普 15g-br009TX', '惠普 15g-bx001AX', '惠普 15g-bx002AX', '惠普 15g-bx004AX', '惠普 15q-aj001tx', '惠普 15q-aj006TX', '惠普 15q-aj103tx', '惠普 15q-aj107tx', '惠普 15q-aj108tx', '惠普 15q-aj111tx', '惠普 15q-aj122tx', '惠普 15q-bu103TX', '惠普 15q-bu104TX', '惠普 15q-by001AX', '惠普 17-ac002TX', '惠普 17-ac102TX', '惠普 17g-br001TX', '惠普 17g-br100TX', '惠普 17q-bu100TX', '惠普 240 G6', '惠普 245 G3', '惠普 245 G6', '惠普 250 G4', '惠普 250 G6', '惠普 346 G4', '惠普 348 G4', '惠普 4330s', '惠普 720 G2', '惠普 820 G2']
-        #productname_not_done = ['华硕 X550', '华硕 N75', '华硕 ROG玩家国度系列 S7VS', '华硕 S7ZC']
+
         productname_not_done = get_incompleted_product_name(_brand, _product_name_list)  # 每次循环启动，就检查进度
         print("productname_not_done :" + str(len(productname_not_done)))
+        
         # 用于创建future
         for i in range(len(_product_name_list)):
             if _product_name_list[i] not in productname_not_done: continue
@@ -879,27 +662,16 @@ def main(get_formdata_and_price_by_url_batch):  # <10>
 
 
 if __name__ == '__main__':
-
-    print(type(BRAND_DICT))
-    print(MAX_WORKERS)
-
     notebook_url = "http://www.youdemai.net/products/product/brands?c=5&type=L&source="
     brand_dict = get_brand_dict(notebook_url)
     out_brand = "asus"
-
-
+    
+    # 获取产品的若干个url集合
     out_product_url_list, spid_list = get_producturls_by_url(out_brand)
     print(len(out_product_url_list))
 
     # 产品名列表，总表
     out_product_name_list = get_productnames_from_producturls(out_product_url_list)
 
-    # 直接运行
-    #for i in range(len(product_url_list)):
-    #    #if i < 10: continue  # 总共就16台，  i=6
-    #    print("开始执行main方法里的循环，第" +str(i+1) +"次")
-    #    get_formdata_and_price_by_url(product_url_list[i])
-    #    time.sleep(3)
-
-    # 多进程
-    main(get_formdata_and_price_by_url_batch)  # 4进程 apple 200条 767秒  16进程 apple 500条 520秒
+    # 多进程获取符合格式的价格
+    main(get_formdata_and_price_by_url_batch)
