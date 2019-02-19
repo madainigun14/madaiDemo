@@ -6,9 +6,13 @@ Public Sub splitA1()
 End Sub
 
 
-Sub ±éÀúËùÓĞÎÄ¼ş()
+Sub éå†æ‰€æœ‰æ–‡ä»¶()
+'æ­¤ä»£ç å¿…é¡»åœ¨Excel>Visual Baiscçš„ ThisWorkBooké‡Œè¿è¡Œï¼Œä¸è¦åœ¨Sheet1é‡Œè¿è¡Œ
+'ä¸è¦åœ¨Sheet1é‡Œè¿è¡Œ
+'ä¸è¦åœ¨Sheet1é‡Œè¿è¡Œ
+'ä¸è¦åœ¨Sheet1é‡Œè¿è¡Œ
 Dim Fn$, N%
-filepath = "F:\µçÄÔ±¨¼Û\youdemai\apple\1000_excel\"  'ĞèÒª±éÀúµÄÎÄ¼ş¼Ğ
+filepath = "F:\ç”µè„‘æŠ¥ä»·\youdemai\apple\1000_excel\"  'éœ€è¦éå†çš„æ–‡ä»¶å¤¹
 Fn = Dir(filepath & "*.xlsx")
 While Fn <> ""
    N = N + 1
@@ -17,10 +21,10 @@ While Fn <> ""
    Dim wb As Workbook
    
    Set wb = Workbooks.Open(filepath & Fn)
-   Call splitA1   '½«A1ÁĞµÄÊı¾İ°´ÕÕÒ»¶¨µÄ·Ö¸ô·û·Ö¸î
+   Call splitA1   'å°†A1åˆ—çš„æ•°æ®æŒ‰ç…§ä¸€å®šçš„åˆ†éš”ç¬¦åˆ†å‰²
    wb.Save
    wb.Close
-   Fn = Dir   'Õâ¾äĞèÒª·ÅÔÚWorkbooks.OpenºóÃæ
+   Fn = Dir   'è¿™å¥éœ€è¦æ”¾åœ¨Workbooks.Openåé¢
 Wend
 End Sub
 
